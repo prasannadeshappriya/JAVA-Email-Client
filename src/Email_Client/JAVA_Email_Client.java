@@ -5,12 +5,48 @@
  */
 package Email_Client;
 
+import java.util.Properties;
+import javax.mail.*;
+import javax.mail.internet.*;
 /**
  *
  * @author prasanna
  */
 public class JAVA_Email_Client {
+    public static void send(String from,String password,String to,String sub,String msg){  
+          //Get properties object    
+          Properties props = new Properties();    
+          props.put("mail.smtp.host", "smtp.gmail.com");    
+          props.put("mail.smtp.socketFactory.port", "465");    
+          props.put("mail.smtp.socketFactory.class",    
+                    "javax.net.ssl.SSLSocketFactory");    
+          props.put("mail.smtp.auth", "true");    
+          props.put("mail.smtp.port", "465");    
+          //get Session   
+          Session session = Session.getDefaultInstance(props,    
+           new javax.mail.Authenticator() {    
+           @Override
+           protected PasswordAuthentication getPasswordAuthentication() {    
+           return new PasswordAuthentication(from,password);  
+           }    
+          });    
+          //compose message    
+          try {    
+           MimeMessage message = new MimeMessage(session);    
+           message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));    
+           message.setSubject(sub);    
+           message.setText(msg);    
+           //send message  
+           Transport.send(message);    
+           System.out.println("message sent successfully");    
+          } catch (MessagingException e) {throw new RuntimeException(e);}    
+             
+    }   
     public static void main(String[] args) {
-        System.out.println("asdad");
+        // TODO code application logic here
+        String emailFrom = "sithumi.hansika@gmail.com";
+        String password = "sIthumI123456789";
+        String emailTo = "prasannadeshappriya@gmail.com";
+        JAVA_Email_Client.send(emailFrom, password,emailTo,"hello javatpoint","How r u?");  
     }
 }
